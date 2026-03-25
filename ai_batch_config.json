@@ -1,0 +1,37 @@
+{
+  "browser_path": "",
+  "last_checked": [
+    "Chrome_Profile 16"
+  ],
+  "window_width": 375,
+  "window_height": 800,
+  "default_url": "https://chatgpt.com",
+  "tab_presses": 5,
+  "launch_delay": 200,
+  "window_x": 100,
+  "window_y": 100,
+  "credentials": {
+    "email": "",
+    "password": "",
+    "use_auto_login": false,
+    "login_tabs": 4,
+    "signup_tabs": 5
+  },
+  "profile_credentials": {
+    "Chrome_Profile 16": {
+      "email": "jonh65941@gmail.com",
+      "password": "JSE7KjMhdn1tcy8hJjA3",
+      "use_auto_login": true,
+      "login_tabs": 10,
+      "signup_tabs": 10,
+      "last_updated": "2026-01-19 19:30:05"
+    }
+  },
+  "global_credentials": {
+    "email": "",
+    "password": "",
+    "use_auto_login": false,
+    "login_tabs": 4,
+    "signup_tabs": 5
+  }
+}
