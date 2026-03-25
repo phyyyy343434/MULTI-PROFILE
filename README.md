@@ -1,8 +1,8 @@
-📖 Overview
-MULTI-PROFILE is a streamlined solution for developers who manage multiple GitHub or GitLab accounts (e.g., Work vs. Personal) on a single machine. It automates the switching of SSH keys and Git user identities based on the directory context.
+🚀 MULTI-PROFILE
+Effortless Git Identity Management for Multiple Accounts
 
-🎯 The Problem
-Accidentally committing to a company repository using a personal email, or failing to push because of the wrong SSH key.
+📖 Overview
+MULTI-PROFILE is a streamlined solution for developers who manage multiple GitHub or GitLab accounts (e.g., Work vs. Personal) on a single machine.
 
 ✅ The Solution
 Using Git Conditional Includes to dynamically load configurations based on the project path.
@@ -16,7 +16,7 @@ Separate your projects into dedicated root folders:
 ~/Developer/personal/
 
 2. Configure SSH Keys
-Edit your ~/.ssh/config file to map specific hosts to specific keys:
+Edit your ~/.ssh/config file:
 
 Code snippet
 # Work Account
@@ -63,10 +63,10 @@ Root/
 │   └── personal/
 │       ├── .gitconfig-personal (Identity B)
 │       └── side-hustle/
-🚀 Why Use This?
+🚀 Key Benefits
 Zero Manual Switching: Set it once, and Git handles the rest.
 
-Privacy: Keeps your personal email out of corporate commit histories.
+Privacy: Keeps your personal email out of corporate histories.
 
 Security: Ensures the correct SSH key is used for the correct server.
 
@@ -84,4 +84,4 @@ Open a Pull Request
 ⚖️ License
 Distributed under the MIT License. See LICENSE for more information.
 
-Managed by PHE SOPHY | 2026
+Developed by PHE SOPHY | 2026
