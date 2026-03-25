@@ -1,73 +1,104 @@
-Status: Active ✅
+# ChatGPT Profile Launcher
 
-Understood, Master JZYY. The diagram looks like a mess because the special characters and spacing aren't being escaped properly in GitHub's Markdown.
+This is a Python-based automation tool to concurrently launch multiple Chrome profiles, navigate them to ChatGPT, and automatically handle the initial login/signup popup.
 
-I have fixed the PROJECT STRUCTURE to use a dedicated Code Block (which forces a fixed-width font and prevents the text from "smushing" together). I also added clean headers to match the Apple-style precision you want.
+## Tech Stack
+- **Language**: Python 3.8+
+- **Automation**: Playwright
+- **OS**: Windows
 
-Copy and paste this version:
+---
 
-<div align="center">🚀 MULTI-PROFILE</div>
-<div align="center">
+## 1. Step-by-Step Setup Guide
 
-Advanced Git Identity & SSH Key Orchestration System
+### Step 1: Install Python
+Ensure you have Python 3.8 or newer installed. You can download it from [python.org](https://www.python.org/downloads/). Make sure to check the box that says "Add Python to PATH" during installation.
 
-</div>
+### Step 2: Install Required Libraries
+Open a command prompt (cmd) or PowerShell and run the following commands to install Playwright and its dependencies:
 
-PROJECT OVERVIEW
-This project is a robust, automated solution for managing multiple Git identities and SSH configurations on a single workstation.
+```sh
+pip install playwright
+```
 
-The primary objective is to eliminate "Identity Leakage" (committing withß the wrong email) and "Authentication Friction" (SSH key conflicts) when switching between professional, personal, and open-source environments.
+### Step 3: Install Browsers for Playwright
+Playwright needs its own browser instances. This command will download a compatible version of Chromium (which we will use to run your Chrome profiles).
 
-PROJECT STRUCTURE
-Plaintext
-MULTI-PROFILE/
-├── configs/
-│   ├── .gitconfig-personal    # Personal identity (Name/Email)
-│   └── .gitconfig-work        # Professional identity (Name/Email)
-├── scripts/
-│   └── setup.sh               # Environment initialization script
-├── .gitconfig                 # Global entry point (Conditional Logic)
-├── ssh_config_example         # Reference for ~/.ssh/config mapping
-├── LICENSE                    # MIT License
-└── README.md                  # Technical documentation
-KEY FEATURES & IMPLEMENTATION DETAILS
-A. Conditional Configuration Injection
-Instead of manually updating global variables, this project uses the includeIf directive.
+```sh
+playwright install chromium
+```
 
-Logic: When a user enters a specific directory tree (e.g., ~/Developer/work/), Git automatically merges the corresponding profile.
+---
 
-Benefit: Zero manual commands required when switching projects.
+## 2. Configuration
 
-B. SSH Identity Mapping
-Standard SSH setups struggle with multiple keys for the same host (github.com).
+The application is controlled by the `config.json` file.
 
-Implementation: Custom Host aliases in ~/.ssh/config.
+### Step 1: Find Your Chrome User Data Directory
+This is the most important step. This folder contains all your Chrome profiles, cookies, and settings.
 
-Result: Discrete keys for github.com-work and github.com-personal.
+1.  Open Chrome.
+2.  Navigate to the URL `chrome://version`.
+3.  Look for the **"Profile Path"** field.
+4.  Copy the entire path, but **remove** the last part (e.g., `\Default` or `\Profile 1`) to get the parent `User Data` directory.
 
-SETUP & DEPLOYMENT
-1. Clone the repository:
+It will typically be: `C:\Users\<YourUsername>\AppData\Local\Google\Chrome\User Data`
 
-Bash
-git clone https://github.com/phyyyy343434/MULTI-PROFILE.git
-cd MULTI-PROFILE
-2. Configure your Global Git:
-Add these lines to your ~/.gitconfig:
+### Step 2: Edit `config.json`
+Open the `config.json` file and make the following changes:
 
-Code snippet
-[includeIf "gitdir:~/Developer/work/"]
-    path = ~/Developer/work/.gitconfig-work
+```json
+{
+  "chrome_user_data_dir": "C:\\Users\\YourUsername\\AppData\\Local\\Google\\Chrome\\User Data",
+  "profiles": [
+    "Default",
+    "Profile 1",
+    "Profile 2"
+  ],
+  "start_url": "https://chatgpt.com",
+  "run_headless": false
+}
+```
 
-[includeIf "gitdir:~/Developer/personal/"]
-    path = ~/Developer/personal/.gitconfig-personal
-TECHNICAL DEBT & OPTIMIZATION ROADMAP
-Automated Setup Script: Currently manual; planned bash automation.
+- **`chrome_user_data_dir`**: Paste the `User Data` path you copied. **Important**: Use double backslashes (`\\`) for the path in JSON.
+- **`profiles`**: List the folder names of the Chrome profiles you want to launch. These are the folders inside the `User Data` directory (e.g., `Default`, `Profile 1`, `Profile 2`).
+- **`start_url`**: The URL to navigate to. Defaults to ChatGPT.
+- **`run_headless`**: Set to `true` to run browsers invisibly in the background. Set to `false` to watch them work.
 
-Cross-Platform Support: Optimized for Unix; Windows support coming soon.
+---
 
-Asset Optimization: Transitioning to standardized rem-based spacing scales.
+## 3. How to Run
 
-PROJECT STATUS
-This project is actively maintained as a core utility for the JZYY Development Environment.
+Once configured, simply open a command prompt or PowerShell in the project folder and run:
 
-Maintained by: PHE SOPHY ✅
+```sh
+python main.py
+```
+
+The script will then launch and automate a browser for each profile listed in your config.
+
+---
+
+## 4. Explanation of Popup Detection Logic
+
+The previous method relied on screen coordinates or image matching, which is unreliable. This application uses Playwright's modern locator API for precision.
+
+The core logic is in the `automation.py` file:
+
+```python
+# This line creates a "locator" for the button.
+# It tells Playwright to find an element that is a "button" and has the exact name "Stay logged out".
+logout_button = page.get_by_role("button", name="Stay logged out")
+
+# This line waits for up to 5 seconds for the button to appear and then clicks it.
+# If it doesn't appear, it will time out and report an error for that profile,
+# but it won't crash the whole application.
+await logout_button.click(timeout=5000)
+```
+
+This approach is superior because:
+- **It's not a guess**: It directly asks the browser for the button based on its accessibility properties.
+- **It's resilient**: It will work even if the button's color, size, or position on the page changes.
+- **It has a built-in wait**: It automatically waits for the element to exist before trying to interact with it, eliminating timing issues.
+
+```
