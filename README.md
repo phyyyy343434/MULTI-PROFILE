@@ -16,7 +16,7 @@ Advanced Git Identity & SSH Key Orchestration System
 PROJECT OVERVIEW
 This project is a robust, automated solution for managing multiple Git identities and SSH configurations on a single workstation.
 
-The primary objective is to eliminate "Identity Leakage" (committing with the wrong email) and "Authentication Friction" (SSH key conflicts) when switching between professional, personal, and open-source environments.
+The primary objective is to eliminate "Identity Leakage" (committing withß the wrong email) and "Authentication Friction" (SSH key conflicts) when switching between professional, personal, and open-source environments.
 
 PROJECT STRUCTURE
 Plaintext
@@ -70,4 +70,4 @@ Asset Optimization: Transitioning to standardized rem-based spacing scales.
 PROJECT STATUS
 This project is actively maintained as a core utility for the JZYY Development Environment.
 
-Maintained by: JZYY ✅
+Maintained by: PHE SOPHY ✅
