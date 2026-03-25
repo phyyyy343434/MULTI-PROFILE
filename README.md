@@ -1,104 +1,87 @@
-# ChatGPT Profile Launcher
+📖 Overview
+MULTI-PROFILE is a streamlined solution for developers who manage multiple GitHub or GitLab accounts (e.g., Work vs. Personal) on a single machine. It automates the switching of SSH keys and Git user identities based on the directory context.
 
-This is a Python-based automation tool to concurrently launch multiple Chrome profiles, navigate them to ChatGPT, and automatically handle the initial login/signup popup.
+🎯 The Problem
+Accidentally committing to a company repository using a personal email, or failing to push because of the wrong SSH key.
 
-## Tech Stack
-- **Language**: Python 3.8+
-- **Automation**: Playwright
-- **OS**: Windows
+✅ The Solution
+Using Git Conditional Includes to dynamically load configurations based on the project path.
 
----
+🛠️ Implementation Guide
+1. Organize Your Directories
+Separate your projects into dedicated root folders:
 
-## 1. Step-by-Step Setup Guide
+~/Developer/work/
 
-### Step 1: Install Python
-Ensure you have Python 3.8 or newer installed. You can download it from [python.org](https://www.python.org/downloads/). Make sure to check the box that says "Add Python to PATH" during installation.
+~/Developer/personal/
 
-### Step 2: Install Required Libraries
-Open a command prompt (cmd) or PowerShell and run the following commands to install Playwright and its dependencies:
+2. Configure SSH Keys
+Edit your ~/.ssh/config file to map specific hosts to specific keys:
 
-```sh
-pip install playwright
-```
+Code snippet
+# Work Account
+Host github.com-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_work
 
-### Step 3: Install Browsers for Playwright
-Playwright needs its own browser instances. This command will download a compatible version of Chromium (which we will use to run your Chrome profiles).
+# Personal Account
+Host github.com-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_personal
+3. Setup Git Conditional Includes
+In your global ~/.gitconfig, add the following logic:
 
-```sh
-playwright install chromium
-```
+Code snippet
+[user]
+    name = Default Name
+    email = default@email.com
 
----
+# Apply work config for projects in the 'work' folder
+[includeIf "gitdir:~/Developer/work/"]
+    path = ~/Developer/work/.gitconfig-work
 
-## 2. Configuration
+# Apply personal config for projects in the 'personal' folder
+[includeIf "gitdir:~/Developer/personal/"]
+    path = ~/Developer/personal/.gitconfig-personal
+4. Create Sub-Configs
+Create the specific identity files (e.g., ~/Developer/work/.gitconfig-work):
 
-The application is controlled by the `config.json` file.
+Code snippet
+[user]
+    name = Your Name
+    email = work-email@company.com
+📂 Architecture Preview
+Plaintext
+Root/
+├── .gitconfig (Global Settings)
+├── Developer/
+│   ├── work/
+│   │   ├── .gitconfig-work (Identity A)
+│   │   └── project-alpha/
+│   └── personal/
+│       ├── .gitconfig-personal (Identity B)
+│       └── side-hustle/
+🚀 Why Use This?
+Zero Manual Switching: Set it once, and Git handles the rest.
 
-### Step 1: Find Your Chrome User Data Directory
-This is the most important step. This folder contains all your Chrome profiles, cookies, and settings.
+Privacy: Keeps your personal email out of corporate commit histories.
 
-1.  Open Chrome.
-2.  Navigate to the URL `chrome://version`.
-3.  Look for the **"Profile Path"** field.
-4.  Copy the entire path, but **remove** the last part (e.g., `\Default` or `\Profile 1`) to get the parent `User Data` directory.
+Security: Ensures the correct SSH key is used for the correct server.
 
-It will typically be: `C:\Users\<YourUsername>\AppData\Local\Google\Chrome\User Data`
+🤝 Contributing
+Fork the Project
 
-### Step 2: Edit `config.json`
-Open the `config.json` file and make the following changes:
+Create your Feature Branch (git checkout -b feature/AmazingFeature)
 
-```json
-{
-  "chrome_user_data_dir": "C:\\Users\\YourUsername\\AppData\\Local\\Google\\Chrome\\User Data",
-  "profiles": [
-    "Default",
-    "Profile 1",
-    "Profile 2"
-  ],
-  "start_url": "https://chatgpt.com",
-  "run_headless": false
-}
-```
+Commit your Changes (git commit -m 'Add some AmazingFeature')
 
-- **`chrome_user_data_dir`**: Paste the `User Data` path you copied. **Important**: Use double backslashes (`\\`) for the path in JSON.
-- **`profiles`**: List the folder names of the Chrome profiles you want to launch. These are the folders inside the `User Data` directory (e.g., `Default`, `Profile 1`, `Profile 2`).
-- **`start_url`**: The URL to navigate to. Defaults to ChatGPT.
-- **`run_headless`**: Set to `true` to run browsers invisibly in the background. Set to `false` to watch them work.
+Push to the Branch (git push origin feature/AmazingFeature)
 
----
+Open a Pull Request
 
-## 3. How to Run
+⚖️ License
+Distributed under the MIT License. See LICENSE for more information.
 
-Once configured, simply open a command prompt or PowerShell in the project folder and run:
-
-```sh
-python main.py
-```
-
-The script will then launch and automate a browser for each profile listed in your config.
-
----
-
-## 4. Explanation of Popup Detection Logic
-
-The previous method relied on screen coordinates or image matching, which is unreliable. This application uses Playwright's modern locator API for precision.
-
-The core logic is in the `automation.py` file:
-
-```python
-# This line creates a "locator" for the button.
-# It tells Playwright to find an element that is a "button" and has the exact name "Stay logged out".
-logout_button = page.get_by_role("button", name="Stay logged out")
-
-# This line waits for up to 5 seconds for the button to appear and then clicks it.
-# If it doesn't appear, it will time out and report an error for that profile,
-# but it won't crash the whole application.
-await logout_button.click(timeout=5000)
-```
-
-This approach is superior because:
-- **It's not a guess**: It directly asks the browser for the button based on its accessibility properties.
-- **It's resilient**: It will work even if the button's color, size, or position on the page changes.
-- **It has a built-in wait**: It automatically waits for the element to exist before trying to interact with it, eliminating timing issues.
-
-```
+Managed by PHE SOPHY | 2026
