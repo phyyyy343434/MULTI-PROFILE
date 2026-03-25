@@ -1,76 +1,82 @@
-🚀 MULTI-PROFILE
-Effortless Git Identity Management for Multiple Accounts
+<div align="center">🚀 MULTI-PROFILE</div>
+<div align="center">
 
-📖 Overview
-MULTI-PROFILE is a streamlined solution for developers who manage multiple GitHub or GitLab accounts (e.g., Work vs. Personal) on a single machine.
+The ultimate way to manage multiple Git identities and SSH keys seamlessly.
 
-✅ The Solution
-Using Git Conditional Includes to dynamically load configurations based on the project path.
+Report Bug · Request Feature
 
-🛠️ Implementation Guide
-1. Organize Your Directories
-Separate your projects into dedicated root folders:
+</div>
 
-~/Developer/work/
+🧐 About The Project
+MULTI-PROFILE solves the identity crisis for developers. If you use one machine for both Work and Personal projects, you’ve likely committed code with the wrong email address or struggled with SSH key conflicts.
 
-~/Developer/personal/
+This project provides a clean architecture using Git Conditional Includes to automatically switch your user.name, user.email, and SSH keys based on the directory you are currently in.
 
-2. Configure SSH Keys
-Edit your ~/.ssh/config file:
+✨ Key Features
+⚙️ Automatic Switching: No more manual git config user.email for every project.
+
+🔒 SSH Isolation: Map specific keys to specific GitHub profiles.
+
+📁 Organized Workflow: Keeps your global configurations clean and modular.
+
+🛠️ Getting Started
+1. Folder Setup
+Organize your workspace into dedicated root folders:
+
+Bash
+mkdir -p ~/Developer/work
+mkdir -p ~/Developer/personal
+2. SSH Configuration
+Edit your ~/.ssh/config file to handle multiple accounts:
 
 Code snippet
-# Work Account
+# Work Profile
 Host github.com-work
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_rsa_work
 
-# Personal Account
+# Personal Profile
 Host github.com-personal
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_rsa_personal
-3. Setup Git Conditional Includes
-In your global ~/.gitconfig, add the following logic:
+3. Git Conditional Logic
+Update your global ~/.gitconfig to include paths dynamically:
 
 Code snippet
 [user]
-    name = Default Name
+    name = Your Default Name
     email = default@email.com
 
-# Apply work config for projects in the 'work' folder
 [includeIf "gitdir:~/Developer/work/"]
     path = ~/Developer/work/.gitconfig-work
 
-# Apply personal config for projects in the 'personal' folder
 [includeIf "gitdir:~/Developer/personal/"]
     path = ~/Developer/personal/.gitconfig-personal
-4. Create Sub-Configs
-Create the specific identity files (e.g., ~/Developer/work/.gitconfig-work):
-
-Code snippet
-[user]
-    name = Your Name
-    email = work-email@company.com
-📂 Architecture Preview
+🏗️ Project Architecture
 Plaintext
 Root/
-├── .gitconfig (Global Settings)
+├── .gitconfig                 # Global logic & routing
 ├── Developer/
 │   ├── work/
-│   │   ├── .gitconfig-work (Identity A)
-│   │   └── project-alpha/
+│   │   ├── .gitconfig-work    # Work Identity (Email/Name)
+│   │   └── company-repo/
 │   └── personal/
-│       ├── .gitconfig-personal (Identity B)
-│       └── side-hustle/
-🚀 Key Benefits
-Zero Manual Switching: Set it once, and Git handles the rest.
+│       ├── .gitconfig-personal # Personal Identity (Email/Name)
+│       └── side-project/
+🗺️ Roadmap
+[x] Core structure for Work/Personal profiles.
 
-Privacy: Keeps your personal email out of corporate histories.
+[x] SSH Key mapping guide.
 
-Security: Ensures the correct SSH key is used for the correct server.
+[ ] Add automated setup script (setup.sh).
+
+[ ] Support for macOS, Linux, and Windows.
 
 🤝 Contributing
+Contributions make the open-source community an amazing place!
+
 Fork the Project
 
 Create your Feature Branch (git checkout -b feature/AmazingFeature)
@@ -81,7 +87,10 @@ Push to the Branch (git push origin feature/AmazingFeature)
 
 Open a Pull Request
 
-⚖️ License
+📜 License
 Distributed under the MIT License. See LICENSE for more information.
 
-Developed by PHE SOPHY | 2026
+<div align="center">
+
+Developed with ⚡ by PHE SOPHY
+</div>
